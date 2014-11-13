@@ -3,7 +3,10 @@ package edu.temple.messagepush;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -13,6 +16,7 @@ import android.widget.EditText;
 
 public class MainActivity extends Activity {
 	
+	public static boolean inForeground = true;
 	
 	public static final String PROPERTY_REG_ID = "registration_id";
 	private static final String PROPERTY_APP_VERSION = "appVersion";
@@ -27,6 +31,14 @@ public class MainActivity extends Activity {
     String SENDER_ID = "512577098719";
     
     EditText messageView;
+    
+    private BroadcastReceiver displayMessage = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+			messageView.setText(intent.getStringExtra("message"));
+        }
+	};
+    
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +54,9 @@ public class MainActivity extends Activity {
             registerInBackground();
         }
 		
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("MESSAGE_BROADCAST_ACTION");
+        registerReceiver(displayMessage, filter);
 	}
 	
 	/**
@@ -153,5 +168,23 @@ public class MainActivity extends Activity {
 	            return null;
 	        }
 	    }.execute();
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		inForeground = false;
+	}
+	
+	@Override
+	public void onResume(){
+		super.onResume();
+		inForeground = true;
+	}
+	
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		unregisterReceiver(displayMessage);
 	}
 }

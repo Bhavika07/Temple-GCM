@@ -15,10 +15,10 @@ public class GcmIntentService extends IntentService {
 	public static final int NOTIFICATION_ID = 1;
 	
 	private NotificationManager mNotificationManager;
-
-	public GcmIntentService(String name) {
-		super(name);
-	}
+	
+	public GcmIntentService() {
+        super("GcmIntentService");
+    }
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
@@ -45,7 +45,7 @@ public class GcmIntentService extends IntentService {
             // If it's a regular GCM message, do some work.
             } else if (GoogleCloudMessaging.
                     MESSAGE_TYPE_MESSAGE.equals(messageType)) {
-                sendMessage(extras.toString());
+                sendMessage(extras.getString("message")	);
             }
         }
         // Release the wake lock provided by the WakefulBroadcastReceiver.
@@ -56,22 +56,29 @@ public class GcmIntentService extends IntentService {
     // This is just one simple example of what you might choose to do with
     // a GCM message.
     private void sendMessage(String msg) {
-        mNotificationManager = (NotificationManager)
-                this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
-
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-        .setSmallIcon(R.drawable.ic_launcher)
-        .setContentTitle("GCM Notification")
-        .setStyle(new NotificationCompat.BigTextStyle()
-        .bigText(msg))
-        .setContentText(msg);
-
-        mBuilder.setContentIntent(contentIntent);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    	
+    	if (MainActivity.inForeground) {
+    		Intent messageIntent = new Intent("MESSAGE_BROADCAST_ACTION");
+    		messageIntent.putExtra("message", msg);
+    		sendBroadcast(messageIntent);
+    	} else {
+	        mNotificationManager = (NotificationManager)
+	                this.getSystemService(Context.NOTIFICATION_SERVICE);
+	
+	        PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
+	                new Intent(this, MainActivity.class), 0);
+	
+	        NotificationCompat.Builder mBuilder =
+	                new NotificationCompat.Builder(this)
+	        .setSmallIcon(R.drawable.ic_launcher)
+	        .setContentTitle("GCM Notification")
+	        .setStyle(new NotificationCompat.BigTextStyle()
+	        .bigText(msg))
+	        .setContentText(msg);
+	
+	        mBuilder.setContentIntent(contentIntent);
+	        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+    	}
         
         
         
