@@ -84,7 +84,6 @@ static final String APIBaseURL = "http://kamorris.com/temple/gcmdemo/";
         return response.toString();
     }
 
-    
     private static String extractHttpResponse(HttpResponse httpResponse) throws IllegalStateException, IOException{
     	InputStream instream = httpResponse.getEntity().getContent();
 
@@ -111,7 +110,7 @@ static final String APIBaseURL = "http://kamorris.com/temple/gcmdemo/";
         regInfo.put("user_id", userId);
         regInfo.put("reg_id", regId);
         
-        String response = makeAPICall(context,  RequestMethod.GET, "soundgram.php", regInfo);
+        String response = makeAPICall(context,  RequestMethod.PUT, "gcm_register.php", regInfo);
         try {
             JSONObject responseObject = new JSONObject(response);
             if (responseObject.getString("status").equalsIgnoreCase("ok")){

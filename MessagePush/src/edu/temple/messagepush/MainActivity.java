@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
      * Substitute you own sender ID here. This is the project number you got
      * from the API Console.
      */
-    String SENDER_ID = "Your-Sender-ID";
+    String SENDER_ID = "512577098719";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 	
 	/**
 	 * Stores the registration ID and app versionCode in the application's
-	 * {@code SharedPreferences}.
+	 * SharedPreferences.
 	 *
 	 * @param context application's context.
 	 * @param regId registration ID
