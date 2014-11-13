@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
 	
@@ -24,11 +25,15 @@ public class MainActivity extends Activity {
      * from the API Console.
      */
     String SENDER_ID = "512577098719";
+    
+    EditText messageView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		messageView = (EditText) findViewById(R.id.messageView);
 		
 		gcm = GoogleCloudMessaging.getInstance(this);
         regId = getRegistrationId(this);
@@ -69,6 +74,19 @@ public class MainActivity extends Activity {
 	    String registrationId = prefs.getString(PROPERTY_REG_ID, "");
 	    if (registrationId.isEmpty()) {
 	    	registrationId = "";
+	    } else {
+	    	final String finalRegId = registrationId;
+	    	Thread thread = new Thread(){
+	    		@Override
+	    		public void run(){
+	    			try {
+	    				API.registerGCM(MainActivity.this, 1111, finalRegId);
+	    			} catch (Exception e){
+	    				e.printStackTrace();
+	    			}
+	    		}
+	    	};
+	    	thread.start();
 	    }
 	    
 	    // Check if app was updated; if so, it must clear the registration ID

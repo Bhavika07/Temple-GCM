@@ -100,6 +100,7 @@ int id holo_dark 0x7f080005
 int id holo_light 0x7f080006
 int id hybrid 0x7f080000
 int id match_parent 0x7f08000c
+int id messageView 0x7f080014
 int id monochrome 0x7f080013
 int id none 0x7f080001
 int id normal 0x7f080002
