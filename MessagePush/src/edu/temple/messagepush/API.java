@@ -48,19 +48,16 @@ static final String APIBaseURL = "http://kamorris.com/temple/gcmdemo/";
     	if (requestType == RequestMethod.POST){
 	    	HttpPost method = new HttpPost(APIBaseURL + api);
 	    	method.addHeader("Accept-Encoding", "gzip");
-	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-	        if (values != null)
-	            nameValuePairs.add(new BasicNameValuePair("data", values.toString()));
-	        method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+	    	method.setHeader("Content-type", "application/json");
+	    	if (values != null)
+	    		method.setEntity(new StringEntity(values.toString()));
 	        httpResponse = client.execute(method);
     	} else if (requestType == RequestMethod.PUT) {
     		HttpPut method = new HttpPut(APIBaseURL + api);
 	    	method.addHeader("Accept-Encoding", "gzip");
 	    	method.setHeader("Content-type", "application/json");
-	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
 	        if (values != null)
-	            nameValuePairs.add(new BasicNameValuePair("data", values.toString()));
-	        method.setEntity(new StringEntity(values.toString()));
+	        	method.setEntity(new StringEntity(values.toString()));
 	        httpResponse = client.execute(method);
     	} else if (requestType == RequestMethod.DELETE){
     		HttpDelete method = new HttpDelete(APIBaseURL + api);
