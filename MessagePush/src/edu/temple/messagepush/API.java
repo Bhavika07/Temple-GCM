@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
@@ -13,6 +12,7 @@ import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -48,11 +48,10 @@ static final String APIBaseURL = "http://kamorris.com/temple/gcmdemo/";
     	if (requestType == RequestMethod.POST){
 	    	HttpPost method = new HttpPost(APIBaseURL + api);
 	    	method.addHeader("Accept-Encoding", "gzip");
-	    	method.setHeader("Content-type", "application/json");
-	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(1);
+	        List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
 	        if (values != null)
 	            nameValuePairs.add(new BasicNameValuePair("data", values.toString()));
-	        method.setEntity(new StringEntity(values.toString()));
+	        method.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 	        httpResponse = client.execute(method);
     	} else if (requestType == RequestMethod.PUT) {
     		HttpPut method = new HttpPut(APIBaseURL + api);
